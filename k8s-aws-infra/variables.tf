@@ -27,7 +27,13 @@ variable "hosted_zone_name" {
 variable "cluster_version" {
   description = "EKS cluster version"
   type        = string
-  default     = "1.31"
+  default     = "1.32"
+}
+
+variable "kubectl_version" {
+  description = "kubectl version to install on a Jenkins server that will interact with EKS"
+  type        = string
+  default     = "v1.32.0"
 }
 
 variable "cluster_endpoint_public_access" {

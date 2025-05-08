@@ -189,11 +189,15 @@ resource "aws_instance" "jenkins" {
   key_name                    = aws_key_pair.key_pair.key_name
   security_groups             = [module.https_sg.id, module.ssh_sg.id]
   subnet_id                   = module.vpc.public_subnets[0]
-  user_data                   = templatefile("${path.module}/userData.tpl",{})
+  user_data                   = templatefile("${path.module}/userData.tpl", { kubectl_version = var.kubectl_version })
   user_data_replace_on_change = true
   associate_public_ip_address = true
 
-tags = {
+  lifecycle {
+    ignore_changes = [security_groups]
+  }
+
+  tags = {
     Name = "jenkins"
   }
 }
