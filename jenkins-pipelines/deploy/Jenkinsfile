@@ -12,7 +12,7 @@ pipeline {
             steps {
                 script {
                     dir('k8s-yaml') {
-                        // Update packages inside the cluster
+                        // Setting context for kubectl with the server niks-cluster
                         sh "aws eks update-kubeconfig --name niks-cluster"
                         // Deploy all yamls
                         sh "kubectl apply -f ."

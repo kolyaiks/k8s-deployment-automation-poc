@@ -1,3 +1,7 @@
+##############
+## VPC
+##############
+
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
   version = "5.13.0"
@@ -19,6 +23,10 @@ module "vpc" {
   enable_nat_gateway = false
   single_nat_gateway = false
 }
+
+##############
+## NAT
+##############
 
 module "nat0" {
   source = "../modules/nat"
@@ -59,6 +67,10 @@ resource "aws_eip" "nat1" {
     "Name" = "nat-instance-nat-instance-1"
   }
 }
+
+##############
+## EKS
+##############
 
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
@@ -131,21 +143,23 @@ module "eks" {
     }
   }
 
-  #  cluster_security_group_additional_rules = {
-  #    vpn_to_api_endpoint = {
-  #      description = "From VPN to communicate with the private API Endpoint"
-  #      protocol    = "tcp"
-  #      from_port   = 443
-  #      to_port     = 443
-  #      type        = "ingress"
-  #      cidr_blocks = var.allow_access_to_eks_ip_endpoint_list
-  #    }
-  #  }
+  cluster_security_group_additional_rules = {
+    vpn_to_api_endpoint = {
+      description = "Within VPC from Jenkins server"
+      protocol    = "tcp"
+      from_port   = 443
+      to_port     = 443
+      type        = "ingress"
+      cidr_blocks = [module.vpc.vpc_cidr_block]
+    }
+  }
 }
-#############
+
+##############
 ## Jenkins
 ##############
 
+#======SGs=========================
 
 module "https_sg" {
   source  = "../modules/security_group"
@@ -183,6 +197,8 @@ resource "aws_key_pair" "key_pair" {
   public_key = var.public_key_for_ec2_key_pair
 }
 
+#======Jenkins server=========================
+
 resource "aws_instance" "jenkins" {
   ami                         = "ami-0f88e80871fd81e91"
   instance_type               = "t3.micro"
@@ -192,6 +208,11 @@ resource "aws_instance" "jenkins" {
   user_data                   = templatefile("${path.module}/userData.tpl", { kubectl_version = var.kubectl_version })
   user_data_replace_on_change = true
   associate_public_ip_address = true
+
+  root_block_device {
+    volume_size = 20
+    volume_type = "gp3"
+  }
 
   lifecycle {
     ignore_changes = [security_groups]
