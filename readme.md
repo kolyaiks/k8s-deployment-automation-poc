@@ -1,3 +1,5 @@
+# Jenknins to K8s deployment using TF
+
 ## Order of use:
 1. k8s-aws-infra - do `terraform apply`, to create base infrastructure, eks cluster and jenkins server
 2. k8s-yaml - in `k8s-yaml/ingress.yaml` set subnets in field `alb.ingress.kubernetes.io/subnets` and cert arn in field `alb.ingress.kubernetes.io/certificate-arn` , commit and push to git, will be used by jenkins pipeline to create/delete k8s resources 
