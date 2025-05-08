@@ -3,7 +3,7 @@
 resource "aws_route53_record" "alb_dev" {
   allow_overwrite = true
   name            = "devapi.${var.hosted_zone_name}"
-  records         = ["k8s-lbgroup-c34715b03f-1555692688.us-east-1.elb.amazonaws.com"]
+  records         = ["k8s-lbgroup-c34715b03f-1596754075.us-east-1.elb.amazonaws.com"] //TODO: set the alb name here
   ttl             = 60
   type            = "CNAME"
   zone_id         = data.aws_route53_zone.public_hosted_zone.zone_id

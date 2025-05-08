@@ -3,6 +3,9 @@
 #update system
 yum update -y
 
+#increasing /tmp size, since that's a thing that's gonna be used by Jenkins for builds
+sudo mount -o remount,size=10G /tmp
+
 #installing Jenkins
 sudo wget -O /etc/yum.repos.d/jenkins.repo \
     https://pkg.jenkins.io/redhat-stable/jenkins.repo
@@ -25,6 +28,3 @@ sudo yum install git -y
 sudo curl -LO "https://dl.k8s.io/release/${kubectl_version}/bin/linux/amd64/kubectl"
 sudo chmod +x ./kubectl
 sudo mkdir -p $HOME/bin && sudo cp ./kubectl $HOME/bin/kubectl && export PATH=$PATH:$HOME/bin
-
-#increasing /tmp size, since that's a thing that's gonna be used by Jenkins for builds
-sudo mount -o remount,size=10G /tmp

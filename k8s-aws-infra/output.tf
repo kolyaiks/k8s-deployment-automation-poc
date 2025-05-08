@@ -14,3 +14,7 @@ output "jenkins_ip" {
   value = aws_instance.jenkins.public_ip
 }
 
+output "alb_dev_dns_name" {
+  value = aws_route53_record.alb_dev.name
+}
+

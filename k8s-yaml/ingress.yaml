@@ -21,8 +21,7 @@ metadata:
 #    alb.ingress.kubernetes.io/unhealthy-threshold-count: '2'
 spec:
   rules:
-    - host: devapi.niks.cloud # Gonna be overwritten with an actual domain name in overlay
-      http:
+    - http: # can also set as a row above to tie request to particular host: host: devapi.niks.cloud # Gonna be overwritten with an actual domain name in overlay
         paths:
           - path: /*
             pathType: ImplementationSpecific
